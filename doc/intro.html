@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Guo Bangwei" />
+
+<meta name="date" content="2020-12-17" />
+
+<title>Introduction to my function</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to my function</h1>
+<h4 class="author">Guo Bangwei</h4>
+<h4 class="date">2020-12-17</h4>
+
+
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>This is a simple rmakedown to introduce my two function. I write two function in my package. The function ‘redata’ is a function that can generate random number for my research. And the function ‘naivekernelplot’ is a function for my course. Next I will give a detailed introduction to these functions.</p>
+</div>
+<div id="the-function-redata" class="section level2">
+<h2>The function ‘<em>redata</em>’</h2>
+<div id="background" class="section level3">
+<h3>Background</h3>
+<p>Consider a longitudinal study with measurements of categorical outcomes obtained at <span class="math inline">\(m\)</span> times for <span class="math inline">\(n\)</span> subjects. Observations from different subjects are assumed to be independent, but those from the same subject are generally correlated. Let the number of levels of the response be <span class="math inline">\(q + 1\)</span>, then we can code the response using <span class="math inline">\(q\)</span> dummy variables <span class="math inline">\(Y_{itj}\)</span>, where <span class="math inline">\(Y_{itj}=1\)</span> if subject <span class="math inline">\(i(=1,...,n)\)</span> has response level <span class="math inline">\(j=(1,...,q+1)\)</span> at time <span class="math inline">\(t(=1,...,m),\)</span> and <span class="math inline">\(Y_{itj}=0\)</span> if otherwise. The response for the <span class="math inline">\(i\)</span>th subject at time <span class="math inline">\(t\)</span> can now be represented by <span class="math inline">\(Y_{it}=(Y_{it1},...,Y_{itq})^T,\)</span> a <span class="math inline">\(q\)</span>-vector. Throughout this article, <span class="math inline">\(A^T\)</span> denotes the transpose of a vector or matrix <span class="math inline">\(A\)</span>. In the situation where the outcome is binary (i.e.,<span class="math inline">\(q=1\)</span>), <span class="math inline">\(Y_{it}\)</span> reduces to a scalar. Let <span class="math inline">\(x_{it}\)</span>, a <span class="math inline">\(\bar p_n\)</span>-vector, coding covariates associated with the <span class="math inline">\(i\)</span>th subject at time <span class="math inline">\(t\)</span>.</p>
+<p>Since <span class="math inline">\((Y_{it1},...,Y_{it,q+1})\)</span> follows a multinomial distribution, the likelihood for the <span class="math inline">\(i\)</span>th subject at time <span class="math inline">\(t\)</span> can be written as <span class="math display">\[\begin{eqnarray}
+ f(y_{it}|x_{it},\beta_n)=\Pi_{j=1}^{q+1}\pi_{itj}^{y_{itj}},\nonumber
+    \end{eqnarray}\]</span></p>
+<p>where <span class="math inline">\(\pi_{itj}=\pi_{itj}(\beta_n)=P(Y_{itj}=1|x_{it},\beta_n)\)</span> and <span class="math inline">\(\beta_n\)</span> is a $ p_n$-vector of regression parameters.</p>
+<p>If the categories are ordered, then a cumulative logistic model can be used: <span class="math display">\[
+\begin{eqnarray}
+     \pi_{itj}(\beta_n)=[1+\exp(-\eta_j)]^{-1}-[1+\exp(-\eta_{j-1})]^{-1}, j=1,...,q
+\end{eqnarray}
+\]</span> where <span class="math inline">\(\eta_0=-\infty\)</span>, <span class="math inline">\(\eta=(\eta_1,...,\eta_q)^T=X_{it}^T\beta_n\)</span>, <span class="math inline">\(X^T_{it}=(I_q,(x_{it},...,x_{it})^T)_{q\times (q+\bar p_n)}\)</span>, <span class="math inline">\(\beta_n=(\delta_1,...,\delta_{q},\bar\beta_n^T)^T\)</span>, <span class="math inline">\(\bar\beta_n\)</span> is a <span class="math inline">\(\bar p_n\)</span>-vector of regression parameters, <span class="math inline">\(\delta_1&lt; \cdots&lt;\delta_q\)</span> are threshold values, <span class="math inline">\(I_q\)</span> is the <span class="math inline">\(q\)</span>-identity matrix. If the categories are unordered, then a nominal logistic model can be used:</p>
+<p><span class="math display">\[
+\begin{eqnarray}
+ \pi_{itj}(\beta_n)=\frac{e^{\eta_j}}{ 1+\sum\limits_{r=1}^q e^{\eta_r}}, j=1,...,q
+\end{eqnarray}
+\]</span></p>
+<p>where <span class="math inline">\((\eta_1,...,\eta_q)^T=X_{it}^T\beta_n\)</span> <span class="math inline">\(X_{it}=\text{diag}(x_{it},...,x_{it})_{q\bar p_n\times q}\)</span>, <span class="math inline">\(\beta_n=(\beta_{n1}^T,...,\beta_{nq}^T)^T\)</span></p>
+</div>
+<div id="introduction-to-redata." class="section level3">
+<h3>Introduction to redata.</h3>
+<p>This function simulates some random data <span class="math inline">\(x_{it}\)</span> of <span class="math inline">\(k\)</span> subjects at <span class="math inline">\(time=1\)</span> and <span class="math inline">\(time=2\)</span> respectively in the above model. So we can calculate <span class="math inline">\(\eta_{itj}\)</span>,<span class="math inline">\(\pi_{itj}\)</span> and <span class="math inline">\(Y_{itj}\)</span>. And it generate any number of dimensions independently of three kinds of random number:</p>
+<p>(1).linear random number <span class="math display">\[x_{it}=a_it+\epsilon_{it}\]</span> where <span class="math inline">\(a_i\sim U(1,2)\)</span> and <span class="math inline">\(\epsilon_{it}\sim N(0,1)\)</span></p>
+<p>(2).log random number <span class="math display">\[x_{it}=a_ilog(t)+\epsilon_{it}\]</span> where <span class="math inline">\(a_i\sim U(1,2)\)</span> and <span class="math inline">\(\epsilon_{it}\sim N(0,1)\)</span></p>
+<p>(3).exponential random number <span class="math display">\[x_{it}=a_ie^t+\epsilon_{it}\]</span> where <span class="math inline">\(a_i\sim U(1,2)\)</span> and <span class="math inline">\(\epsilon_{it}\sim N(0,1)\)</span></p>
+<p>The source R code for <em>redata</em> is as follows:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">redata&lt;-<span class="cf">function</span>(k,l,fl,e){</a>
+<a class="sourceLine" id="cb1-2" title="2">  id&lt;-<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span>k,<span class="dv">1</span><span class="op">:</span>k)</a>
+<a class="sourceLine" id="cb1-3" title="3">  time&lt;-<span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">1</span>,k),<span class="kw">rep</span>(<span class="dv">2</span>,k))</a>
+<a class="sourceLine" id="cb1-4" title="4">  data&lt;-<span class="kw">cbind</span>(id,time)</a>
+<a class="sourceLine" id="cb1-5" title="5">    linear&lt;-<span class="kw">matrix</span>(<span class="kw">rep</span>(<span class="dv">0</span>,<span class="dv">2</span><span class="op">*</span>k<span class="op">*</span>l),<span class="dt">ncol=</span>l)</a>
+<a class="sourceLine" id="cb1-6" title="6">    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>l){</a>
+<a class="sourceLine" id="cb1-7" title="7">      linear1&lt;-<span class="dv">1</span><span class="op">:</span>k</a>
+<a class="sourceLine" id="cb1-8" title="8">      linear2&lt;-<span class="dv">1</span><span class="op">:</span>k</a>
+<a class="sourceLine" id="cb1-9" title="9">      <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>k){</a>
+<a class="sourceLine" id="cb1-10" title="10">        a1&lt;-<span class="kw">runif</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-11" title="11">        linear1[i]&lt;-a1<span class="op">*</span>time[i]<span class="op">+</span><span class="kw">rnorm</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-12" title="12">        linear2[i]&lt;-a1<span class="op">*</span>time[i<span class="op">+</span>k]<span class="op">+</span><span class="kw">rnorm</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-13" title="13">      }</a>
+<a class="sourceLine" id="cb1-14" title="14">      li&lt;-<span class="kw">c</span>(linear1,linear2)</a>
+<a class="sourceLine" id="cb1-15" title="15">      linear[,j]&lt;-li  </a>
+<a class="sourceLine" id="cb1-16" title="16">    }</a>
+<a class="sourceLine" id="cb1-17" title="17">    data&lt;-<span class="kw">cbind</span>(data,linear)</a>
+<a class="sourceLine" id="cb1-18" title="18">    flog&lt;-<span class="kw">matrix</span>(<span class="kw">rep</span>(<span class="dv">0</span>,<span class="dv">2</span><span class="op">*</span>k<span class="op">*</span>fl),<span class="dt">ncol=</span>fl)</a>
+<a class="sourceLine" id="cb1-19" title="19">    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>fl){</a>
+<a class="sourceLine" id="cb1-20" title="20">      flog1&lt;-<span class="dv">1</span><span class="op">:</span>k</a>
+<a class="sourceLine" id="cb1-21" title="21">      flog2&lt;-<span class="dv">1</span><span class="op">:</span>k</a>
+<a class="sourceLine" id="cb1-22" title="22">      <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>k){</a>
+<a class="sourceLine" id="cb1-23" title="23">        a1&lt;-<span class="kw">runif</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-24" title="24">        flog1[i]&lt;-a1<span class="op">*</span><span class="kw">log</span>(time[i])<span class="op">+</span><span class="kw">rnorm</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-25" title="25">        flog2[i]&lt;-a1<span class="op">*</span><span class="kw">log</span>(time[i<span class="op">+</span>k])<span class="op">+</span><span class="kw">rnorm</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-26" title="26">      }</a>
+<a class="sourceLine" id="cb1-27" title="27">      flo&lt;-<span class="kw">c</span>(flog1,flog2)</a>
+<a class="sourceLine" id="cb1-28" title="28">      flog[,j]&lt;-flo </a>
+<a class="sourceLine" id="cb1-29" title="29">    }</a>
+<a class="sourceLine" id="cb1-30" title="30">    data&lt;-<span class="kw">cbind</span>(data,flog)</a>
+<a class="sourceLine" id="cb1-31" title="31">    fexp&lt;-<span class="kw">matrix</span>(<span class="kw">rep</span>(<span class="dv">0</span>,<span class="dv">2</span><span class="op">*</span>k<span class="op">*</span>e),<span class="dt">ncol=</span>e)</a>
+<a class="sourceLine" id="cb1-32" title="32">    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>e){</a>
+<a class="sourceLine" id="cb1-33" title="33">      fexp1&lt;-<span class="dv">1</span><span class="op">:</span>k</a>
+<a class="sourceLine" id="cb1-34" title="34">      fexp2&lt;-<span class="dv">1</span><span class="op">:</span>k</a>
+<a class="sourceLine" id="cb1-35" title="35">      <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>k){</a>
+<a class="sourceLine" id="cb1-36" title="36">        a1&lt;-<span class="kw">runif</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-37" title="37">        fexp1[i]&lt;-a1<span class="op">*</span><span class="kw">exp</span>(time[i])<span class="op">+</span><span class="kw">rnorm</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-38" title="38">        fexp2[i]&lt;-a1<span class="op">*</span><span class="kw">exp</span>(time[i<span class="op">+</span>k])<span class="op">+</span><span class="kw">rnorm</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-39" title="39">      }</a>
+<a class="sourceLine" id="cb1-40" title="40">      fe&lt;-<span class="kw">c</span>(fexp1,fexp2)</a>
+<a class="sourceLine" id="cb1-41" title="41">      fexp[,j]&lt;-fe  </a>
+<a class="sourceLine" id="cb1-42" title="42">    }</a>
+<a class="sourceLine" id="cb1-43" title="43">    data&lt;-<span class="kw">cbind</span>(data,fexp)</a>
+<a class="sourceLine" id="cb1-44" title="44">  <span class="kw">colnames</span>(data)&lt;-<span class="kw">c</span>(<span class="st">&quot;id&quot;</span>,<span class="st">&quot;time&quot;</span>,<span class="kw">rep</span>(<span class="st">&quot;linear&quot;</span>,l),<span class="kw">rep</span>(<span class="st">&quot;log&quot;</span>,fl),<span class="kw">rep</span>(<span class="st">&quot;exp&quot;</span>,e))</a>
+<a class="sourceLine" id="cb1-45" title="45">  <span class="kw">return</span>(data)</a>
+<a class="sourceLine" id="cb1-46" title="46">}</a>
+<a class="sourceLine" id="cb1-47" title="47"> <span class="co">##Example</span></a>
+<a class="sourceLine" id="cb1-48" title="48"> <span class="kw">redata</span>(<span class="dv">10</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>)</a></code></pre></div>
+<pre><code>##       id time     linear     linear        log          log       exp       exp
+##  [1,]  1    1  2.7672344  0.8350717  1.6699854  0.691675799  3.881896  3.033552
+##  [2,]  2    1  0.2890572 -0.3809685  1.5159344 -0.182755654  4.650647  4.748556
+##  [3,]  3    1  0.5084641  2.7493732  0.3566898 -1.606047369  5.878817  4.368776
+##  [4,]  4    1  0.7246116  0.7971679  1.5994833  0.274719567  2.613300  3.523642
+##  [5,]  5    1  2.7563472 -0.8771726 -0.2011930 -1.662802029  2.077260  2.633103
+##  [6,]  6    1  1.8396516  2.8282802 -1.9023457 -0.799602111  2.140567  5.887231
+##  [7,]  7    1  0.4412997  1.6453350 -0.9657382 -1.095033675  5.615440  3.660439
+##  [8,]  8    1  1.4282231  2.1065360 -0.6784348  0.121067870  4.527652  3.872743
+##  [9,]  9    1  1.1806819  2.1053469 -2.3805452 -0.717346056  3.415881  6.130393
+## [10,] 10    1  1.4463947  1.7227455 -0.6722796  0.295835911  2.958995  3.543339
+## [11,]  1    2  4.2057272  2.8091895  1.1906515 -0.202969708 15.941206  7.609148
+## [12,]  2    2  1.8877666  4.3060533  1.0876915  0.069073346  9.428764 14.240170
+## [13,]  3    2  3.5945285  5.2566145 -0.2390472  0.953906173 11.689137  9.647214
+## [14,]  4    2  2.7804930  3.6442741 -0.9990390  2.722875075  7.651620  7.845271
+## [15,]  5    2  2.6283767  5.1067530  0.8507306 -0.004279256 11.372194  9.691179
+## [16,]  6    2  4.1344281  1.7622817  0.2771625  0.498981953 10.065423 14.913751
+## [17,]  7    2  3.6862668  4.1394248 -0.5489368  1.107829682  9.418985  9.216868
+## [18,]  8    2  2.6968971  5.2201597  1.0219510  0.111730994 11.523281  9.359429
+## [19,]  9    2 -0.3251000  3.3453226 -0.2936251  0.406354007  9.184599 12.609324
+## [20,] 10    2  0.8657757  2.6418654  0.6572487  0.316414620  8.152501  4.830645</code></pre>
+</div>
+</div>
+<div id="the-function-naivekernalplot" class="section level2">
+<h2>The function ‘<em>naivekernalplot</em>’</h2>
+<div id="background-1" class="section level3">
+<h3>Background</h3>
+<p>Since <span class="math display">\[
+f(x)=\lim _{h \rightarrow 0} \frac{F(x+h)-F(x-h)}{2 h}=\lim _{h \rightarrow 0} \frac{1}{2 h} P(x-h&lt;X \leq x+h)
+\]</span></p>
+<p>One could imagine estimating <span class="math inline">\(f\)</span> by picking a small value of <span class="math inline">\(h\)</span> and taking</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat{f}_{h}(x) &amp;=\frac{1}{2 h}\left[\hat{F}_{n}(x+h)-\hat{F}_{n}(x-h)\right] \\
+&amp;=\frac{1}{2 h n} \sum_{i=1}^{n} I\left(x-h&lt;X_{i} \leq x+h\right) \\
+&amp;=\frac{1}{n} \sum_{i=1}^{n} \frac{1}{h} K\left(\frac{X_{i}-x}{h}\right)
+\end{aligned}
+\]</span> where <span class="math inline">\(K(x)=\frac{1}{2} I(-1&lt;x \leq 1)\)</span></p>
+<p>This is the naive density estimate.</p>
+</div>
+<div id="introduction-to-naivekernalplot" class="section level3">
+<h3>Introduction to naivekernalplot</h3>
+<p>This function offer different bandwidth <span class="math inline">\(h\)</span> and any numbers of random number <span class="math inline">\(N\)</span> to estimate a mixed Normal Distribution: <span class="math display">\[f(x)=\frac{1}{2} \phi(x ; 0,1)+\frac{1}{10} \sum_{j=0}^{4} \phi(x ; j / 2-1,1 / 10)\]</span></p>
+<p>The source R code for <em>naivekernelplot</em> is as follows:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">naivekernelplot&lt;-<span class="cf">function</span>(N,h){</a>
+<a class="sourceLine" id="cb3-2" title="2">    rf&lt;-<span class="dv">1</span><span class="op">:</span>N</a>
+<a class="sourceLine" id="cb3-3" title="3">    index&lt;-<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,N,<span class="dt">replace=</span><span class="ot">TRUE</span>,<span class="dt">prob=</span><span class="kw">c</span>(<span class="fl">0.5</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))</a>
+<a class="sourceLine" id="cb3-4" title="4">    <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>N) {</a>
+<a class="sourceLine" id="cb3-5" title="5">       <span class="cf">if</span>(index[i]<span class="op">==</span><span class="dv">1</span>){rf[i]&lt;-<span class="kw">rnorm</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)}</a>
+<a class="sourceLine" id="cb3-6" title="6">       <span class="cf">else</span> rf[i]&lt;-<span class="kw">rnorm</span>(<span class="dv">1</span>,(index[i]<span class="op">-</span><span class="dv">2</span>)<span class="op">/</span><span class="dv">2-1</span>,<span class="fl">0.1</span>)</a>
+<a class="sourceLine" id="cb3-7" title="7">}</a>
+<a class="sourceLine" id="cb3-8" title="8">    naive&lt;-<span class="cf">function</span>(x,X,h){</a>
+<a class="sourceLine" id="cb3-9" title="9">    n&lt;-<span class="kw">length</span>(X)</a>
+<a class="sourceLine" id="cb3-10" title="10">    K&lt;-<span class="cf">function</span>(l){</a>
+<a class="sourceLine" id="cb3-11" title="11">    <span class="cf">if</span>(<span class="op">-</span><span class="dv">1</span><span class="op">&lt;</span>l<span class="op">&amp;&amp;</span>l<span class="op">&lt;</span><span class="dv">1</span>) <span class="kw">return</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb3-12" title="12">    <span class="cf">else</span> <span class="kw">return</span>(<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb3-13" title="13">    }</a>
+<a class="sourceLine" id="cb3-14" title="14">    sum=<span class="dv">0</span></a>
+<a class="sourceLine" id="cb3-15" title="15">    <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n) {</a>
+<a class="sourceLine" id="cb3-16" title="16">    sum=sum<span class="op">+</span>(<span class="dv">1</span><span class="op">/</span>n)<span class="op">*</span>(<span class="dv">1</span><span class="op">/</span>h)<span class="op">*</span><span class="kw">K</span>((X[i]<span class="op">-</span>x)<span class="op">/</span>h)</a>
+<a class="sourceLine" id="cb3-17" title="17">  }</a>
+<a class="sourceLine" id="cb3-18" title="18">    <span class="kw">return</span>(sum)</a>
+<a class="sourceLine" id="cb3-19" title="19">}</a>
+<a class="sourceLine" id="cb3-20" title="20">    xl&lt;-<span class="kw">seq</span>(<span class="op">-</span><span class="dv">3</span>,<span class="dv">3</span>,<span class="fl">0.001</span>)</a>
+<a class="sourceLine" id="cb3-21" title="21">    m&lt;-<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(xl)</a>
+<a class="sourceLine" id="cb3-22" title="22">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(xl)){</a>
+<a class="sourceLine" id="cb3-23" title="23">    m[i]&lt;-<span class="kw">naive</span>(xl[i],rf,h)</a>
+<a class="sourceLine" id="cb3-24" title="24">  }</a>
+<a class="sourceLine" id="cb3-25" title="25">    <span class="kw">plot</span>(xl,m,<span class="dt">type=</span><span class="st">&#39;l&#39;</span>,<span class="dt">xlab =</span><span class="st">&#39;x&#39;</span>,<span class="dt">ylab=</span><span class="st">&#39;naive estimate f(x)&#39;</span>)</a>
+<a class="sourceLine" id="cb3-26" title="26">}</a>
+<a class="sourceLine" id="cb3-27" title="27"><span class="co">##Example:</span></a>
+<a class="sourceLine" id="cb3-28" title="28">  <span class="kw">set.seed</span>(<span class="dv">1998</span>)</a>
+<a class="sourceLine" id="cb3-29" title="29">  <span class="kw">naivekernelplot</span>(<span class="dv">1000</span>,<span class="fl">0.1</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

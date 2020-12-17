@@ -1,0 +1,1298 @@
+---
+title: "Introduction to my homework"
+author: "Guo Bangwei"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to my homework}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## The homework 0  2020-09-22
+
+### Question
+Use knitr to produce 3 examples in the book. The 1st example
+should contain texts and at least one figure. The 2nd example
+should contains texts and at least one table. The 3rd example
+should contain at least a couple of LaTeX formulas.
+
+### Answer
+
+#### Example 1
+
+This is a Q-Qplot picture.\
+![Q-Qplot](C:\Users\86183\Desktop\gbw\jisuan\QQplot1.png)\
+
+#### Example 2
+
+This is a table
+```{r,echo=FALSE}
+a <- letters[1:3]
+table(a, sample(a), deparse.level = 0) # dnn is c("", "")
+```
+
+
+#### Example 3
+
+They are LATEX equations.
+
+$$H_{n}\left(\beta_{n}\right)=\sum_{i=1}^{n} X_{i} \dot{\pi}_{i}\left(\beta_{n}\right) A_{i}^{-1 / 2}\left(\beta_{n}\right) \hat{R}_{n}^{-1} A_{i}^{-1 / 2}\left(\beta_{n}\right) \dot{\pi}_{i}^{\tau}\left(\beta_{n}\right) X_{i}^{\tau}$$
+$$\hat{M}_{n}\left(\beta_{n}\right)=\sum_{i=1}^{n} X_{i} \dot{\pi}_{i}\left(\beta_{n}\right) A_{i}^{-1 / 2}\left(\beta_{n}\right) \hat{R}_{n}^{-1} \bar{\epsilon}_{i}\left(\beta_{n}\right) \bar{\epsilon}_{i}^{\tau}\left(\beta_{n}\right) \hat{R}_{n}^{-1} A_{i}^{-1 / 2}\left(\beta_{n}\right) \dot{\pi}_{i}^{\tau}\left(\beta_{n}\right) X_{i}^{\tau}$$
+
+## The homework 1   2020-10-05
+
+### Question
+
+Exercises 3.3, 3.9, 3.10, and 3.13 (pages 94-95, Statistical
+Computating with R).
+
+### Answer
+
+#### 3.3
+
+$F^{-1}(U)=\frac{2}{\sqrt{1-u}}$,求导可得密度函数为$f(x)=\frac{8}{x^{3}},x\geq 2$
+```{r}
+set.seed(1998)
+n <- 1000
+u <- runif(n)
+x <- 2/sqrt(1-u) 
+hist(x, breaks=500,xlim=c(2,10),prob = TRUE, main = expression(f(x)==(8/x^3)))
+y <- seq(2, 10, .01)
+lines(y, 8*y^(-3),col="red")
+```
+
+#### 3.9:
+取50000个随机数
+```{r}
+set.seed(1998)
+n<-50000
+u1 <- runif(n,-1,1)
+u2 <- runif(n,-1,1)
+u3 <- runif(n,-1,1)
+u4 <-rep(0,n)
+for (i in 1:n) {
+  if(abs(u3[i])>=abs(u1[i])&&abs(u3[i])>=abs(u2[i]))
+    u4[i]<-u2[i]
+  else u4[i]<-u3[i]
+}
+hist(u4, breaks=500,xlim=c(-1,1),xlab="x",prob = TRUE,main="rescaled Epanechnikov kernel")
+y <- seq(-1, 1, .0002)
+lines(y,0.75*(1-y^2),col="red")
+```
+
+#### 3.10
+
+令通过该算法得到的结果变量为$U_4$,
+$$
+P(U_4=u)
+=P(U_2=u,|U_3|\geq|U_2|,|U_3|\geq|U_1|)+P(U_3=u,|U_3|<|U_2|,|U_3|<|U_1|)\\
++P(U_3=u,|U_3|<|U_2|,|U_3|\geq|U_1|)+P(U_2=u,|U_3|\geq|U_2|,|U_3|<|U_1|)\\
+=\frac{1}{2}(1-|u|)\frac{1+|u|}{2}+\frac{1}{2}(1-|u|)^2+(1-|u|)|u|\\
+=\frac{3}{4}(1-u^2)
+$$
+
+从而验证了算法
+
+#### 3.13
+
+```{r}
+set.seed(1998)
+n <- 1000
+u <- runif(n)
+x <- 2/(1-u)^(0.25)-2 #反解
+hist(x, breaks=500,xlim=c(0,6),prob = TRUE, main = expression(f(x)==64(x+2)^(-5)))
+y <- seq(0, 6, .01)
+lines(y,64*(y+2)^(-5),col="red" )
+```
+
+## The homework 2   2020-10-13
+
+### Question
+
+Exercises 5.1, 5.7, and 5.11 (pages 149-151, Statistical
+Computating with R).
+
+### Answer
+
+#### 5.1 
+使用蒙特卡洛方法估计积分 $\int_0^\frac{\pi}{3}sin(t)dt$,取$f(x)$为 $U[0,\frac{\pi}{3}]$\
+```{r}
+set.seed(1998)
+k<-10000
+X<-runif(k,0,pi/3)
+Y<-mean(pi/3*sin(X))
+Y#蒙特卡洛积分估计值#
+```
+下面计算真实值
+```{r}
+truevalue<--cos(pi/3)+cos(0)
+truevalue
+```
+
+
+#### 5.7
+
+根据5.6的计算，当$U\sim U[0,1]$，$var(e^U+e^{1-U})=10e-3e^2-5,var(e^U)=2e-\frac{1}{2}e^2-\frac{3}{2}$\
+传统的MC方法的方差为$var(\theta_1)=\frac{1}{m}var(e^U)$，改进后的方法的方差为$var(\theta_2)=\frac{1}{\frac{n}{2}}var(\frac{e^U+e^{1-U}}{2})=\frac{1}{2n}var(e^U+e^{1-U})$\
+代入可得理论的改进效率为$96.8$%
+
+```{r}
+set.seed(1998)
+m<-100000
+X<-runif(m,0,1)
+Y<-mean(exp(X))
+theta<-exp(X)
+FANGCHA<-1/m*var(theta)
+FANGCHA#使用传统MC方法的方差#
+FANGCHA2<-1/(2*m)*var(exp(X[1:(k/2)])+exp((1-X)[1:(k/2)]))
+FANGCHA2#使用Inverse transformation method后的方差#
+(FANGCHA-FANGCHA2)/FANGCHA#降低方差的效率#
+a1<-10*exp(1)-3*exp(1)^2-5
+a2<-2*exp(1)-0.5*exp(1)^2-1.5
+(a2-a1/2)/a2#理论效率#
+```
+
+#### 5.11
+
+将$Var(\hat{\theta}_c)=E(\hat{\theta_1}-\hat{\theta_2})^2c^2+2Cov(\hat{\theta_2},\hat{\theta_1}-\hat{\theta_2})c+var(\hat{\theta_2})$看作关于c的二次函数\
+对称轴：$\frac{Var(\hat{\theta_2})-Cov(\hat{\theta_1},\hat{\theta_2})}{var(\hat{\theta_1}-\hat{\theta_2})}$\
+当对称轴大于0，c取对称轴值时，方差最小\
+当对称轴小于0，c=0时，方差最小
+
+## The homework 3   2020-10-20
+
+### Question
+
+Exercises 5.13, 5.15, 6.4, and 6.5 (page 151 and 180,
+Statistical Computating with R).
+
+### Answer
+
+#### 5.13 
+先画出$g(x)$的图像
+```{r}
+x<- seq(1.01,4,.01)
+y<-((x^2)*exp(-0.5*x^2))/((2*pi)^0.5)
+g<-function(x){
+   ((x^2)*exp(-0.5*x^2))/((2*pi)^0.5)*(x>1)
+}
+plot(x,y,type = "l")
+```
+
+取important function $f_1$为$N(1.5,1),x>1$。
+
+```{r}
+set.seed(1998)
+m<-10000
+X1<-rnorm(m,1.5,1)
+Y1<-mean(g(X1)/dnorm(X1,1.5,1))
+var1<-var(g(X1)/dnorm(X1,1.5,1))
+Y1
+var1#这里var1是g(X)/f1(X)的方差
+```
+\
+取important function $f_2$为$e^{-x},x>1$。
+```{r}
+set.seed(1998)
+m<-10000
+X2<-rexp(m,1)
+Y2<-mean(g(X2)/dexp(X2,1))
+var2<-var(g(X2)/dexp(X2,1))
+Y2
+var2#这里var2是g(X)/f2(X)的方差
+```
+
+从而可以看出，取N(1.5,1)时的方差更好，因为此时$f_1(x)$与$g(x)$的图像更接近。
+
+
+#### 5.15
+
+From 10000 replicates we obtained the estimate $\hat{\theta}=0.5257801$ and an estimated standard error 0.0970314.
+```{r}
+set.seed(1998)
+m<-2000
+g<-function(x){
+  exp(-x)/(1+x^2)*(x>0)*(x<1)
+}
+f<-function(x){
+  exp(-x)/(1-exp(-1))
+}
+a<-rep(0,6)
+a[1]<-0
+for(i in 1:5){
+a[i+1]<-qexp((1-exp(-1))*i/5,1)}#生成区间段点
+result<-matrix(rep(0,10),ncol=2)
+for (i in 1:5) {
+  rn<- runif(m,0,1)
+  q<- -log(1-((1-exp(-1))*(rn + i -1)/5))
+  re<- g(q)/((5*(exp(-q)))/(1-exp(-1)))
+  result[i,1]<- mean(re)
+  result[i,2]<- var(re)
+}
+cat("theta的估计是:",sum(result[,1]))
+
+cat("标准差是:",sqrt(sum(result[,2]))) 
+
+```
+显然相比较与Example 5.10中的方法更为优越
+
+
+#### 6.4
+
+先从参数为0；1的对数正态分布中抽样，再计算$\mu$
+理论上95%的置信区间,再计算这些区间包含 0的频率。
+```{r}
+set.seed(1998)
+n<- 20
+alpha<- 0.05
+t<-0
+s<- matrix(rep(0,20000),nrow =10000)
+for (i in 1:10000) {
+  x<- rlnorm(n,0,1)
+  s[i,1]<- mean(log(x))+sd(log(x))*qt(alpha/2,n-1)/(n-1)^0.5
+  s[i,2]<- mean(log(x))-sd(log(x))*qt(alpha/2,n-1)/(n-1)^0.5
+  if(s[i,2]>0 & s[i,1]< 0) 
+    t<-t+1
+}
+t/10000
+```
+即构造的置信区间的置信系数比较接近理论值。
+
+#### 6.5
+
+```{r}
+set.seed(1998)
+n<- 20
+alpha<- 0.05
+t<-0
+re<- matrix(rep(0,20000),nrow =10000)
+for (i in 1:10000) {
+  x<- rchisq(n,2)
+  re[i,1]<- mean(x)+sd(x)*qt(alpha/2,n-1)/sqrt(n-1)
+  re[i,2]<- mean(x)-sd(x)*qt(alpha/2,n-1)/sqrt(n-1)
+  if(re[i,2]>2 & re[i,1]< 2){
+    t<-t+1}
+}
+t/10000
+```
+
+相比样本来自正态分布的置信系数较低，但是更稳健。
+
+## The homework 4   2020-10-27
+
+### Question
+
+Exercises 6.7, 6.8, and 6.C (pages 180-182, Statistical
+Computating with R).
+
+Discussion:\
+If we obtain the powers for two methods under a particular
+simulation setting with 10,000 experiments: say, 0.651 for one
+method and 0.676 for another method. Can we say the powers are different at 0.05 level? \
+  What is the corresponding hypothesis test problem?\
+  What test should we use? Z-test, two-sample t-test, paired-t test or McNemar test?\
+  What information is needed to test your hypothesis?\
+ 
+ 
+### Answer
+
+#### 6.7
+
+先画出参数不同的Beta分布的图像与正态分布的图像进行对比
+```{r eval=FALSE, include=FALSE}
+par(mfcol=c(2,2))
+curve(dbeta(x, 2, 2), from = 0, to = 1)
+curve(dbeta(x, 10, 10), from = 0, to = 1)
+curve(dbeta(x, 30, 30), from = 0, to = 1)
+curve(dnorm(x,0.5,0.1),from =0,to =1,col="red")
+```
+
+\
+可以看出，随着参数$\alpha$的增大，Beta分布的方差减小，图像越来越接近于正态分布，下面做MC方法检验
+```{r}
+set.seed(1998)
+sk <- function(x) {
+#computes the sample skewness coeff.
+xbar <- mean(x)
+m3 <- mean((x - xbar)^3)
+m2 <- mean((x - xbar)^2)
+return( m3 / m2^1.5 )
+}
+alpha <- .1
+n <- 30
+m <- 2500
+canshu <- c(seq(0.5,30,0.5))
+N <- length(canshu)
+pwr <- numeric(N)
+#critical value for the skewness test
+cv <- qnorm(1-alpha/2, 0, sqrt(6*(n-2) / ((n+1)*(n+3))))
+for (j in 1:N) { 
+  e <- canshu[j]
+  sktests <- numeric(m)
+  for (i in 1:m) { #for each replicate
+    x <- rbeta(n,e,e)
+    sktests[i] <- as.integer(abs(sk(x)) >= cv)
+  }
+  pwr[j] <- mean(sktests)
+}
+#plot power vs epsilon
+plot(canshu, pwr, type = "l",
+     xlab = bquote(canshu), ylim = c(0,0.2),col='red')
+abline(h = .1, lty = 3)
+se <- sqrt(pwr * (1-pwr) / m) #add standard errors
+lines(canshu, pwr+se, lty = 3)
+lines(canshu, pwr-se, lty = 3)
+```
+\
+可以看出，随着Beta分布参数$\alpha$的增大，犯第一类错误的概率越来越接近于置信水平$\alpha=0.1$
+\
+再画出参数不同的t分布的图像与正态分布的图像进行对比
+```{r eval=FALSE, include=FALSE}
+set.seed(1998)
+par(mfcol=c(2,2))
+curve(dt(x,2), from = -3, to = 3)
+curve(dt(x,10), from = -3, to = 3)
+curve(dt(x,30), from = -3, to = 3)
+curve(dnorm(x,0,1),from =-3,to =3,col="red")
+```
+
+```{r}
+set.seed(1998)
+sk <- function(x) {
+#computes the sample skewness coeff.
+xbar <- mean(x)
+m3 <- mean((x - xbar)^3)
+m2 <- mean((x - xbar)^2)
+return( m3 / m2^1.5 )
+}
+alpha <- .1
+n <- 30
+m <- 2500
+canshu <- c(seq(1,30,1))
+N <- length(canshu)
+pwr <- numeric(N)
+#critical value for the skewness test
+cv <- qnorm(1-alpha/2, 0, sqrt(6*(n-2) / ((n+1)*(n+3))))
+for (j in 1:N) { 
+  e <- canshu[j]
+  sktests <- numeric(m)
+  for (i in 1:m) { #for each replicate
+    x <- rt(n,e)
+    sktests[i] <- as.integer(abs(sk(x)) >= cv)
+  }
+  pwr[j] <- mean(sktests)
+}
+#plot power vs epsilon
+plot(canshu, pwr, type = "l",
+     xlab = bquote(canshu), ylim = c(0,1),col='red')
+abline(h = .1, lty = 3)
+se <- sqrt(pwr * (1-pwr) / m) #add standard errors
+lines(canshu, pwr+se, lty = 3)
+lines(canshu, pwr-se, lty = 3)
+```
+\
+从功效图像可以看出，随着$t(\gamma)$中$\gamma$的增大，t分布越来越趋向于正态分布,功效会接近置信系数。\
+
+#### 6.8:
+
+先生成一个Count5检验和F检验的函数
+```{r}
+count5test <- function(x, y) {
+X <- x - mean(x)
+Y <- y - mean(y)
+outx <- sum(X > max(Y)) + sum(X < min(Y))
+outy <- sum(Y > max(X)) + sum(Y < min(X))
+# return 1 (reject) or 0 (do not reject H0)
+return(as.integer(max(c(outx, outy)) > 5))
+}
+Ftest<- function(x,y){
+  xl<- length(x)
+  yl<- length(y)
+  sx<- var(x)
+  sy<- var(y)
+  T<- sy/sx
+  return(as.integer(T<qf(0.055/2,xl-1,yl-2)|T>qf(1-0.055/2,xl-1,yl-1)))
+}
+```
+\
+再写一个样本量为自变量的生成两种检验功效的函数：
+```{r}
+set.seed(1998)
+compare<-function(n){
+m <- 1000
+sigma1 <- 1
+sigma2 <- 1.5
+power1 <- mean(replicate(m, expr={
+x <- rnorm(n, 0, sigma1)
+y <- rnorm(n, 0, sigma2)
+count5test(x, y)
+}))
+power2 <- mean(replicate(m, expr={
+x <- rnorm(n, 0, sigma1)
+y <- rnorm(n, 0, sigma2)
+Ftest(x, y)
+}))
+cat("这是样本量为n的时候count5检验的功效",power1)
+cat("\n这是样本量为n的时候F检验的功效",power2)}
+compare(10)#小样本情况
+compare(50)#中样本情况
+compare(500)#大样本情况
+```
+
+可以看出，随着样本量的增大，功效越来越接近于1。其中F检验的功效会更大。
+
+
+#### 6.C
+
+```{r eval=FALSE, include=FALSE}
+set.seed(1998)
+d=1
+m=1000
+n <- c(10, 20, 30, 50, 100, 500) 
+pM<- 1:6
+cv<-matrix(rep(0,2*6),ncol=2)
+for(i in 1:6){
+   cv[i,1]<-6/n[i]*qchisq(.025,d*(d+1)*(d+2)/6)
+   cv[i,2]<-6/n[i]*qchisq(.975,d*(d+1)*(d+2)/6)
+}
+geneb<-function(x){
+  n<-length(x)
+  vcov<- var(x)
+  vrev<- 1/vcov
+  xbar<- mean(x)
+  b<- 0
+  for (i in 1:n) {
+    for (j in 1:n) {
+      b<-b+((x[i]-xbar)*vrev*(x[j]-xbar))^3
+    } 
+  }
+  return(b/(n^2))
+}
+set.seed(1234)
+for (i in 1:6) {
+  sktests<- 1:1000
+  for (j in 1:1000) {
+    x<- rnorm(n[i])
+    v<- geneb(x)
+    if(v<cv[i,1]|v>cv[i,2])
+      sktests[j]<-1 else
+        sktests[j]<-0
+  }
+  pM[i]<- mean(sktests)
+}
+cat("对应的模拟置信系数",pM)
+```
+可以看出，随着样本量得增加，逐渐趋近于置信水平0.5
+
+
+```{r eval=FALSE, include=FALSE}
+set.seed(1998)
+alpha <- .05
+cv<-rep(0,2)
+cv[1]<-6/30*qchisq(.025,d*(d+1)*(d+2)/6)
+cv[2]<-6/30*qchisq(.975,d*(d+1)*(d+2)/6)
+n <- 30
+m <- 1000
+epsilon <- c(seq(0, .15, .01), seq(.15, 1, .05))
+N <- length(epsilon)
+pwr <- numeric(N)
+set.seed(1235)
+#critical value for the skewness test
+for (j in 1:N) { #for each epsilon
+  e <- epsilon[j]
+  matests <- numeric(m)
+  for (i in 1:m) { #for each replicate
+    sigma <- sample(c(1, 10), replace = TRUE,
+                    size = n, prob = c(1-e, e))
+    x <- rnorm(n,0,sigma)
+    if(geneb(x)<cv[1]|geneb(x)>cv[2])
+      matests[i]<-1 else
+        matests[i]<-0
+  }
+  pwr[j] <- mean(matests)
+}
+#plot power vs epsilon
+plot(epsilon, pwr, type = "l",
+     xlab = bquote(epsilon), ylim = c(0,1),col='red')
+abline(h = .05, lty = 3)
+se <- sqrt(pwr * (1-pwr) / m) #add standard errors
+lines(epsilon, pwr+se, lty = 3)
+lines(epsilon, pwr-se, lty = 3)
+```
+可以发现，在$\epsilon$
+等于0或者1时，图像很接近置信系数0.05，这是因为在$\epsilon$等于0或1时，是一个标准正态。
+
+Discussion:
+1.原假设：两种检验功效相等
+2.大样本利用中心极限定理进行正态化近似，然后进行两正态分布的均值检验
+3.因为MC检验法实际上已经在此功效下的二项分布抽样，所以题目已知数据已经足够。
+
+## The homework 5   2020-11-04
+
+### Question
+Exercises 7.1, 7.5, 7.8, and 7.11 (pages 212-213, Statistical
+Computating with R).
+ 
+### Answer
+
+####7.1:
+
+Compute a jackknife estimate of the bias
+```{r}
+library(bootstrap)
+law<-law82
+n <- nrow(law)
+LSAT<- law$LSAT
+GPA<- law$GPA
+cor<-cor(LSAT,GPA)
+print (cor)
+#compute the jackknife replicates
+cor.jack <- numeric(n)
+for (i in 1:n)
+cor.jack[i] <- cor(LSAT[-i],GPA[-i])
+bias <- (n - 1) * (mean(cor.jack) -cor)
+print(bias) #jackknife estimate of bias
+```
+
+Compute a jackknife estimate of the standard error
+
+```{r}
+se <- sqrt((n-1) *mean((cor.jack - mean(cor.jack))^2))
+print(se)#jackknife estimate of standard error
+```
+
+
+#### 7.5 
+
+Use the boot function in the package "boot" to compute the 95% bootstrap confidence intervals for the mean time between failures
+```{r}
+library(boot)
+library(bootstrap)
+set.seed(1237)
+air<-aircondit
+meMLE<-function(x,i){
+  xi<-x[i,1]
+  lamda<-length(xi)/sum(xi)
+  return(1/lamda)
+}
+obj <- boot(data =air, statistic=meMLE, R = 2000)
+print(boot.ci(obj,type = c("basic", "norm", "perc","bca")))
+```
+Because the various approximate distributions used to generate all kinds of confidence intervals are different, the confidence intervals are different.
+
+#### 7.8
+
+Refer to Exercise 7.7. Obtain the jackknife estimates of bias and standard
+error of $\hat{\theta}$
+```{r}
+library(boot)
+thett<-function(x){
+eg<-eigen(cov(x))$values
+theta<-eg[1]/sum(eg)
+return(theta)}
+theta<-thett(scor)
+n<-nrow(scor)
+theta.jack <- numeric(n)
+for (i in 1:n){
+theta.jack[i] <-thett(scor[-i,])
+}
+bias <- (n - 1)* (mean(theta.jack) -theta)
+bias
+```
+\
+Compute a jackknife estimate of the standard error
+
+```{r}
+se <- sqrt((n-1) *mean((theta.jack - mean(theta))^2))
+print(se)#jackknife estimate of standard error
+```
+
+#### 7.11
+
+Use leave-two-out cross validation to compare the models
+```{r}
+library(DAAG); attach(ironslag)
+a <- seq(10, 40, .1) #sequence for plotting fits
+L1 <- lm(magnetic ~ chemical)
+yhat1 <- L1$coef[1] + L1$coef[2] * a
+L2 <- lm(magnetic ~ chemical + I(chemical^2))
+yhat2 <- L2$coef[1] + L2$coef[2] * a + L2$coef[3] * a^2
+L3 <- lm(log(magnetic) ~ chemical)
+logyhat3 <- L3$coef[1] + L3$coef[2] * a
+yhat3 <- exp(logyhat3)
+L4 <- lm(log(magnetic) ~ log(chemical))
+logyhat4 <- L4$coef[1] + L4$coef[2] * log(a)
+
+n <- length(magnetic) #in DAAG ironslag
+e1 <- e2 <- e3 <- e4 <- matrix(rep(0,n^2),nrow=n)
+# for n-fold cross validation
+# fit models on leave-one-out samples
+for (k in 1:(n-1)) {
+  for (m in (k+1):n) {
+    y <- magnetic[-k][-(m-1)]
+    x <- chemical[-k][-(m-1)]
+J1 <- lm(y ~ x)
+yhat11 <- J1$coef[1] + J1$coef[2] * chemical[k]
+yhat12 <- J1$coef[1] + J1$coef[2] * chemical[m]
+e1[k,k] <- magnetic[k] - yhat11
+e1[k,m] <- magnetic[m] - yhat12
+J2 <- lm(y ~ x + I(x^2))
+yhat21 <- J2$coef[1] + J2$coef[2] * chemical[k] +J2$coef[3] * chemical[k]^2
+yhat22 <- J2$coef[1] + J2$coef[2] * chemical[m] +J2$coef[3] * chemical[m]^2
+e2[k,k] <- magnetic[k] - yhat21
+e2[k,m] <- magnetic[m] - yhat22
+J3 <- lm(log(y) ~ x)
+logyhat31 <- J3$coef[1] + J3$coef[2] * chemical[k]
+logyhat32 <- J3$coef[1] + J3$coef[2] * chemical[m]
+yhat31 <- exp(logyhat31)
+yhat32 <- exp(logyhat32)
+e3[k,k] <- magnetic[k] - yhat31
+e3[k,m] <- magnetic[m] - yhat32
+J4 <- lm(log(y) ~ log(x))
+logyhat41 <- J4$coef[1] + J4$coef[2] * log(chemical[k])
+logyhat42 <- J4$coef[1] + J4$coef[2] * log(chemical[m])
+yhat41 <- exp(logyhat41)
+yhat42 <- exp(logyhat42)
+e4[k,k] <- magnetic[k] - yhat41
+e4[k,m] <- magnetic[k] - yhat41
+}
+}
+ee1<-e1[e1!=0]
+ee2<-e2[e2!=0]
+ee3<-e3[e3!=0]
+ee4<-e4[e4!=0]
+print(c(mean(ee1^2),mean(ee2^2),mean(ee3^2),mean(ee4^2)))
+
+
+```
+\
+It can be seen that the fourth model is better because $\sigma^2_{\epsilon}$ is smaller
+
+
+## The homework 6  2020—11-11
+
+### Question
+1.Exercise 8.3 (page 243, Statistical Computating with R).
+
+2.Design experiments for evaluating the performance of the NN,energy, and ball methods in various situations.
+ 
+ (1)Unequal variances and equal expectations
+ 
+ (2)Unequal variances and unequal expectations
+ 
+ (3)Non-normal distributions: t distribution with 1 df (heavy-tailed distribution), bimodel distribution (mixture of two normal
+distributions)
+
+ (4)Unbalanced samples (say, 1 case versus 10 controls)
+ 
+ Note: The parameters should be chosen such that the powers are distinguishable (say, range from 0.3 to 0.8).
+
+### Answer
+
+
+#### 1.
+
+According to the reference [193] R. N. McGrath and B. Y. Yeh. Count Five test for equal variance. The American Statistician, 59:47–53, 2005. We adopt the method in the paper to solve the case that sample sizes are unequal.
+$$P\left(C_{x}^{(\mu)} \geq m \mid H_{0}\right) \approx\left(\frac{n_{x}}{n_{x}+n_{y}}\right)^{m}$$
+Treating it as an equality and letting $P\left(C_{x}^{(\mu)} \geq m \mid H_{0}\right)=\alpha / 2$, I may solve for $\alpha / 2$ for a given $m$, or vice versa as we show in the following example. Take $n_1=200, n_2=300,\alpha=0.065$, becasue $n_1,n_2>>m$. So I solve that $m_{n_2}=7$. In the base of the function Count5test, write the function Countmtest. Then generate samples by permutation method to calculate the mean
+
+```{r}
+set.seed(2443)
+countmtest <- function(x,y,m) {
+X <- x - mean(x)
+Y <- y - mean(y)
+outx <- sum(X > max(Y)) + sum(X < min(Y))
+outy <- sum(Y > max(X)) + sum(Y < min(X))
+# return 1 (reject) or 0 (do not reject H0)
+return(as.integer(max(c(outx, outy)) > m))
+}
+n1 <- 200
+n2 <- 300
+mu1 <- mu2 <- 0
+sigma1 <- sigma2 <- 1
+m <- 10000
+x <- rnorm(n1, mu1, sigma1)
+y <- rnorm(n2, mu2, sigma2)
+R <- 999 #number of replicates
+z <- c(x, y) #pooled sample
+K <- 1:(length(z))
+reps <- numeric(R) #storage for replicates
+for (i in 1:R) {
+#generate indices k for the first sample
+k <- sample(K, size =length(x), replace = FALSE)
+x1 <- z[k]
+y1 <- z[-k] #complement of x1
+reps[i] <- countmtest(x1, y1,7)
+}
+mean(reps)
+
+
+```
+ We can see that the Type I error  ≤ 0.0625 when we use this method.
+ 
+ 
+#### 2.
+
+Case (1): Unequal variances and equal expectations
+```{r eval=FALSE, include=FALSE}
+library(RANN) 
+library(boot)
+library(energy)
+library(Ball)
+Tn <- function(z, ix, sizes,k) {
+  n1 <- sizes[1]; n2 <- sizes[2]; n <- n1 + n2
+  if(is.vector(z)) z <- data.frame(z,0);
+  z <- z[ix, ];
+  NN <- nn2(data=z, k=k+1) 
+  block1 <- NN$nn.idx[1:n1,-1]
+  block2 <- NN$nn.idx[(n1+1):n,-1]
+  i1 <- sum(block1 < n1 + .5); i2 <- sum(block2 > n1+.5)
+  (i1 + i2) / (k * n)
+}
+
+m <- 300; k<-3; p<-2; mu <- 0.3; set.seed(12346)
+n1 <- n2 <- 50; R<-999; n <- n1+n2; N = c(n1,n2)
+eqdist.nn <- function(z,sizes,k){
+  boot.obj <- boot(data=z,statistic=Tn,R=R,
+                   sim = "permutation", sizes = sizes,k=k)
+  ts <- c(boot.obj$t0,boot.obj$t)
+  p.value <- mean(ts>=ts[1])
+  list(statistic=ts[1],p.value=p.value)
+}
+p.values <- matrix(NA,m,3)
+for(i in 1:m){
+  x <- matrix(rnorm(n1*p,0,1.5),ncol=p);
+  y <- matrix(rnorm(n2*p,0,2.04),ncol=p);
+  z <- rbind(x,y)
+  p.values[i,1] <- eqdist.nn(z,N,k)$p.value
+  p.values[i,2] <- eqdist.etest(z,sizes=N,R=R)$p.value
+  p.values[i,3] <- bd.test(x=x,y=y,num.permutations=999,seed=i*12346)$p.value
+}
+alpha <- 0.1;
+pow <- colMeans(p.values<alpha)
+pow
+```
+
+It can be seen that the NN method has the smallest test power and the Ball method has the largest power.
+
+Case (2): Unequal variances and unequal expectations
+```{r eval=FALSE, include=FALSE}
+m <- 300; k<-3; p<-2; mu <- 0.3; set.seed(12347)
+n1 <- n2 <- 50; R<-999; n <- n1+n2; N = c(n1,n2)
+eqdist.nn <- function(z,sizes,k){
+  boot.obj <- boot(data=z,statistic=Tn,R=R,
+                   sim = "permutation", sizes = sizes,k=k)
+  ts <- c(boot.obj$t0,boot.obj$t)
+  p.value <- mean(ts>=ts[1])
+  list(statistic=ts[1],p.value=p.value)
+}
+p.values <- matrix(NA,m,3)
+for(i in 1:m){
+  x <- matrix(rnorm(n1*p,0,1.5),ncol=p);
+  y <- matrix(rnorm(n2*p,0.5,1.8),ncol=p);
+  z <- rbind(x,y)
+  p.values[i,1] <- eqdist.nn(z,N,k)$p.value
+  p.values[i,2] <- eqdist.etest(z,sizes=N,R=R)$p.value
+  p.values[i,3] <- bd.test(x=x,y=y,num.permutations=999,seed=i*12347)$p.value
+}
+alpha <- 0.1;
+pow <- colMeans(p.values<alpha)
+pow
+```
+
+It can be seen that the NN method has the smallest test power, and the energy method and the Ball method have almost the same test power.
+
+Case (3): Non-normal distributions: t distribution with 1 df (heavy-tailed distribution), bimodel distribution (mixture of two normal
+distributions)
+```{r eval=FALSE, include=FALSE}
+m <- 300; k<-3; p<-2; mu <- 0.3; set.seed(12348)
+n1 <- n2 <- 50; R<-999; n <- n1+n2; N = c(n1,n2)
+eqdist.nn <- function(z,sizes,k){
+  boot.obj <- boot(data=z,statistic=Tn,R=R,
+                   sim = "permutation", sizes = sizes,k=k)
+  ts <- c(boot.obj$t0,boot.obj$t)
+  p.value <- mean(ts>=ts[1])
+  list(statistic=ts[1],p.value=p.value)
+}
+p.values <- matrix(NA,m,3)
+for(i in 1:m){
+  x <- matrix(rt(n1*p,1),ncol=p);
+  y1 <- matrix(rnorm(n2*p,0,1),ncol=p)
+  y2 <- matrix(rnorm(n2*p,0,10),ncol=p)
+  index<-sample(0:1,n2,replace=TRUE,c(0.5,0.5))
+  y<-matrix(rep(0,p*n2),ncol=p)
+  for (j in 1:(n2)) {
+  y[j,]<-index[j]*y1[j,]+(1-index[j])*y2[j,]
+  }
+  z <- rbind(x,y)
+  p.values[i,1] <- eqdist.nn(z,N,k)$p.value
+  p.values[i,2] <- eqdist.etest(z,sizes=N,R=R)$p.value
+  p.values[i,3] <- bd.test(x=x,y=y,num.permutations=999,seed=i*12348)$p.value
+}
+alpha <- 0.1;
+pow <- colMeans(p.values<alpha)
+pow
+```
+
+It can be seen that  the power difference between the three tests is not large.
+
+
+Case (4): Unbalanced samples (say, 1 case versus 10 controls)
+
+```{r eval=FALSE, include=FALSE}
+m <- 300; k<-3; p<-2; mu <- 0.3; set.seed(12349)
+n1 <-50;n2 <- 100; R<-999; n <- n1+n2; N = c(n1,n2)
+eqdist.nn <- function(z,sizes,k){
+  boot.obj <- boot(data=z,statistic=Tn,R=R,
+                   sim = "permutation", sizes = sizes,k=k)
+  ts <- c(boot.obj$t0,boot.obj$t)
+  p.value <- mean(ts>=ts[1])
+  list(statistic=ts[1],p.value=p.value)
+}
+p.values <- matrix(NA,m,3)
+for(i in 1:m){
+  x <- matrix(rnorm(n1*p,0,1),ncol=p);
+  y <- matrix(rnorm(n2*p,0.1,1.3),ncol=p);
+  z <- rbind(x,y)
+  p.values[i,1] <- eqdist.nn(z,N,k)$p.value
+  p.values[i,2] <- eqdist.etest(z,sizes=N,R=R)$p.value
+  p.values[i,3] <- bd.test(x=x,y=y,num.permutations=999,seed=i*12349)$p.value
+}
+alpha <- 0.1;
+pow <- colMeans(p.values<alpha)
+pow
+```
+
+It can be seen that the NN method is greatly affected by the sample size, resulting in a large gap between the power of the Ball method and the energy method, and the Ball method has the largest power.
+
+## The homework 7  2020—11—18
+
+### Question
+(1)Exercies 9.4 (pages 277, Statistical Computating with R).
+
+(2)For Exercise 9.4, use the Gelman-Rubin method to monitor convergence of the chain, and run the chain until it converges approximately to the target distribution according to $\hat{R}<1.2$.
+
+(3)Exercises 11.4 (pages 353, Statistical Computing with R)
+
+### Answer
+
+#### (1). 
+
+Use $N(X_t|\sigma^2)$ to generate the chain. According to the example 9.3 of the book, I aim to observe the change of the chain,so I set $X_0=20$
+
+```{r}
+fl<-function(x) 0.5*exp(-abs(x))
+x<-seq(-5,5,0.01)
+y<-fl(x)
+plot(x,y,type='l',main='The Standard Laplace Distribution')
+rw.Metropolis <- function(sigma, x0, N) {
+  x <- numeric(N)
+  x[1] <- x0
+  u <- runif(N)
+  k <- 0
+  for (i in 2:N) {
+    y <- rnorm(1, x[i-1], sigma)
+    if (u[i] <= (fl(y) / fl(x[i-1])))
+      x[i] <- y else {
+        x[i] <- x[i-1]
+        k <- k + 1
+      }
+  }
+  return(list(x=x, k=k))
+}
+N <- 2000
+sigma <- c(.05, .5, 2, 16)
+x0 <- 20
+set.seed(1278)
+rw1 <- rw.Metropolis(sigma[1], x0, N)
+rw2 <- rw.Metropolis(sigma[2], x0, N)
+rw3 <- rw.Metropolis(sigma[3], x0, N)
+rw4 <- rw.Metropolis(sigma[4], x0, N)
+#number of candidate points rejected
+print(c(1-rw1$k/2000, 1-rw2$k/2000, 1-rw3$k/2000, 1-rw4$k/2000))#the acceptance rates
+par(mfrow=c(1,1))
+plot(1:length(rw2$x),rw2$x,type = 'l',xlab = 'σ=0.5',ylab = 'X')
+```
+
+   The second and third chains have a rejection rate in the range $[0.15, 0.5]$.In the first plot, with $\sigma = 0.05$, the ratios $r(X_t, Y )$ tend to be
+large and almost every candidate point is accepted. The increments are small
+and the chain is almost like a true random walk. Chain 1 has not converged
+to the target in 2000 iterations. The chain in the second plot generated with
+$\sigma = 0.5$ converge, but more slowly than the chain3. In the third plot ($\sigma = 2$) the chain is mixing well and converging to the target
+distribution after a short burn-in period. Finally, in the fourth
+plot, where $\sigma = 16$, the ratios $r(X_t, Y )$  are smaller and most of the candidate
+points are rejected. The fourth chain converges, but it is inefficient. 
+
+
+#### (2).
+For Exercise 9.4, use the Gelman-Rubin method to monitor convergence of the chain, and run the chain until it converges approximately to the target distribution according to $\hat{R}<1.2$.
+
+We use the Gelman.Rubin function in the book and change the distribution to the Laplace distribution.
+```{r}
+Gelman.Rubin <- function(psi) {
+# psi[i,j] is the statistic psi(X[i,1:j])
+# for chain in i-th row of X
+psi <- as.matrix(psi)
+n <- ncol(psi)
+k <- nrow(psi)
+psi.means <- rowMeans(psi) #row means
+B <- n * var(psi.means) #between variance est.
+psi.w <- apply(psi, 1, "var") #within variances
+W <- mean(psi.w) #within est.
+v.hat <- W*(n-1)/n + (B/n) #upper variance est.
+r.hat <- v.hat / W #G-R statistic
+return(r.hat)
+}
+```
+
+```{r include=FALSE}
+normal.chain <- function(sigma, N, X1) {
+#generates a Metropolis chain for Normal(0,1)
+#with Normal(X[t], sigma) proposal distribution
+#and starting value X1
+x <- rep(0, N)
+x[1] <- X1
+u <- runif(N)
+for (i in 2:N) {
+xt <- x[i-1]
+y <- rnorm(1, xt, sigma) #candidate point
+r1 <- fl(y) * dnorm(xt, y, sigma)
+r2 <- fl(x[i-1]) * dnorm(y, xt, sigma)
+r <- r1 / r2
+if (u[i] <= r) x[i] <- y else
+x[i] <- xt
+}
+return(x)
+}
+```
+
+
+when $\sigma=0.05$
+```{r eval=FALSE, include=FALSE}
+sigma <-0.05 #parameter of proposal distribution
+k <- 4 #number of chains to generate
+n <- 200000 #length of chains
+b <- 1000 #burn-in length
+#choose overdispersed initial values
+x0 <- c(-10, -5, 5, 10)
+#generate the chains
+X <- matrix(0, nrow=k, ncol=n)
+for (i in 1:k)
+X[i, ] <- normal.chain(sigma, n, x0[i])
+#compute diagnostic statistics
+psi <- t(apply(X, 1, cumsum))
+for (i in 1:nrow(psi))
+psi[i,] <- psi[i,] / (1:ncol(psi))
+print(Gelman.Rubin(psi))
+#plot psi for the four chains
+par(mfrow=c(1,1)) #restore default
+#plot the sequence of R-hat statistics
+rhat1 <- rep(0, n)
+for (j in (b+1):n)
+rhat1[j] <- Gelman.Rubin(psi[,1:j])
+plot(rhat1[(b+1):n], type="l", xlab="", ylab="R")
+abline(h=1.2, lty=2)
+```
+
+
+when $\sigma=0.5$
+```{r eval=FALSE, include=FALSE}
+sigma <-0.5 #parameter of proposal distribution
+k <- 4 #number of chains to generate
+n <- 30000 #length of chains
+b <- 1000 #burn-in length
+#choose overdispersed initial values
+x0 <- c(-10, -5, 5, 10)
+#generate the chains
+X <- matrix(0, nrow=k, ncol=n)
+for (i in 1:k)
+X[i, ] <- normal.chain(sigma, n, x0[i])
+#compute diagnostic statistics
+psi <- t(apply(X, 1, cumsum))
+for (i in 1:nrow(psi))
+psi[i,] <- psi[i,] / (1:ncol(psi))
+print(Gelman.Rubin(psi))
+#plot psi for the four chains
+par(mfrow=c(1,1)) #restore default
+#plot the sequence of R-hat statistics
+rhat2 <- rep(0, n)
+for (j in (b+1):n)
+rhat2[j] <- Gelman.Rubin(psi[,1:j])
+plot(rhat2[(b+1):n], type="l", xlab="", ylab="R")
+abline(h=1.2, lty=2)
+```
+
+when $\sigma=2$
+```{r eval=FALSE, include=FALSE}
+sigma <-2 #parameter of proposal distribution
+k <- 4 #number of chains to generate
+n <- 10000 #length of chains
+b <- 1000 #burn-in length
+#choose overdispersed initial values
+x0 <- c(-10, -5, 5, 10)
+#generate the chains
+X <- matrix(0, nrow=k, ncol=n)
+for (i in 1:k)
+X[i, ] <- normal.chain(sigma, n, x0[i])
+#compute diagnostic statistics
+psi <- t(apply(X, 1, cumsum))
+for (i in 1:nrow(psi))
+psi[i,] <- psi[i,] / (1:ncol(psi))
+print(Gelman.Rubin(psi))
+#plot psi for the four chains
+par(mfrow=c(1,1)) #restore default
+#plot the sequence of R-hat statistics
+rhat3 <- rep(0, n)
+for (j in (b+1):n)
+rhat3[j] <- Gelman.Rubin(psi[,1:j])
+plot(rhat3[(b+1):n], type="l", xlab="", ylab="R")
+abline(h=1.2, lty=2)
+```
+
+
+When the variance $\sigma=0.05$,it's really slow to converge to $\hat{R}<1.2$. When the variance is relatively small relative to the target distribution, the convergence speed of the chain is slower. It can be seen from the convergence speed of the chain that the greater the variance, the faster the convergence to $\hat{R}<1.2$.
+
+#### (3).
+
+Exercises 11.4 (pages 353, Statistical Computing with R)
+
+Use the uniroot function to generate root and write a big function to solve all k.
+```{r}
+soroot<-function(K){
+N<-length(K)
+root<-1:N
+for (i in 1:length(K)) {
+  k<-K[i]
+  S1<-function(a){
+   re1<-1-pt(sqrt(a^2*(k-1)/(k-a^2)),df=(k-1))
+   re2<-1-pt(sqrt(a^2*k/((k+1)-a^2)),df=k)
+   return(re1-re2)
+   }
+  root[i]<-uniroot(S1,c(0.001,2))$root
+}
+print(root)
+}
+soroot(4:25)#k=4:25
+soroot(4:100)#k=4:100
+```
+
+## The homework 8  2020-11-25
+
+### Question
+(1)A-B-O blood type problem
+
+(2)Exercises 3 (page 204, Advanced R).
+
+(3) Excecises 3 and 6 (page 213-214, Advanced R). Note: the anonymous function is defined in Section 10.2 (page 181,Advanced R)
+
+### Answer
+
+#### (1). 
+
+We write the conditional expectation $$E_{\hat{p_0}}[I(p|n_{AA},n_{AB}...)|n_{AA},n_{BB}]=2n_{A\cdot }\frac{p_0^2}{p_0^2+2p_0(1-p_0-q_0)}log(p)+2n_{B\cdot }\frac{q_0^2}{q_0^2+2q_0(1-p_0-q_0)}log(q)\\+2n_{OO}log(1-p-q)+n_{A\cdot }\frac{2p_0(1-p_0-q_0)}{p_0^2+2p_0(1-p_0-q_0)}log(p(1-p-q))\\+n_{B\cdot }\frac{2q_0(1-p_0-q_0)}{q_0^2+2q_0(1-p_0-q_0)}log(q(1-p-q))+n_{AB}log(pq)$$
+```{r}
+nA<-444
+nB<-132
+nOO<-361
+nAB<-63
+p0<-0.3
+q0<-0.2
+LL<-function(theta) {
+  p <- theta[1]
+  q <- theta[2]
+  loglik<-2*nA*((p0^2)/(p0^2+2*p0*(1-p0-q0)))* log(p)+2*nB*((q0^2)/(q0^2+2*q0*(1-p0-q0)))* log(q)+2*nOO*log(1-p-q)+nA*((2*p0*(1-p0-q0))/(p0^2+2*p0*(1-p0-q0)))*log(p*(1-p-q))+nB*((2*q0*(1-p0-q0))/(q0^2+2*q0*(1-p0-q0)))*log(q*(1-p-q))+nAB*log(p*q)
+  return(-loglik)
+}
+BEM<-function(n){
+pars<-matrix(rep(0,2*(n+1)),ncol=2)
+values<-1:(n+1)
+opt<-optim(c(0.3,0.2), LL)
+theta0<-opt$par
+pars[1,]<-theta0
+values[1]<-opt$value
+for(i in 1:n){
+  p1<-pars[i,1]
+  q1<-pars[i,2]
+  LL1<-function(theta) {
+    p <- theta[1]
+    q <- theta[2]
+    loglik<-2*nA*((p1^2)/(p1^2+2*p1*(1-p1-q1)))* log(p)+2*nB*((q1^2)/(q1^2+2*q1*(1-p1-q1)))* log(q)+2*nOO*log(1-p-q)+nA*((2*p1*(1-p1-q1))/(p1^2+2*p1*(1-p1-q1)))*log(p*(1-p-q))+nB*((2*q1*(1-p1-q1))/(q1^2+2*q1*(1-p1-q1)))*log(q*(1-p-q))+nAB*log(p*q)
+    return(-loglik)
+ }
+opt<-optim(c(pars[i,1],pars[i,2]), LL1)
+theta1<-opt$par
+pars[(i+1),]<-theta1
+values[i+1]<-opt$value
+}
+result<-cbind(pars,-values)
+colnames(result)<-c('p','q','ml values')
+return(result)
+}
+BEM(5)
+```
+we can see that log-maximum likelihood values are increasing. We can see that the value obtained after five iterations converges.
+
+#### (2). 
+
+loop:
+```{r}
+mpg<-mtcars$mpg
+disp<-mtcars$disp
+wt<-mtcars$wt
+formulas <- list(
+  mpg ~ disp,
+  mpg ~ I(1 / disp),
+  mpg ~ disp + wt,
+  mpg ~ I(1 / disp) + wt
+)
+for (i in 1:4) {
+  print(lm(formulas[[i]]))
+}
+```
+
+
+lapply function:
+```{r}
+mpg<-mtcars$mpg
+disp<-mtcars$disp
+wt<-mtcars$wt
+formulas <- list(
+  mpg ~ disp,
+  mpg ~ I(1 / disp),
+  mpg ~ disp + wt,
+  mpg ~ I(1 / disp) + wt
+)
+lapply(formulas,lm)
+
+```
+
+
+#### (3). 
+
+Exercise 3
+```{r}
+trials <- replicate(
+  100,
+  t.test(rpois(10, 10), rpois(7, 10)),
+  simplify = FALSE
+)
+sapply(trials,function(x) x$p.value)
+```
+
+Exercise 6
+```{r}
+library(parallel)
+summary <- function(x) {
+funs <- c(mean, median, sd, mad, IQR)
+sapply(funs, function(f) f(x, na.rm = TRUE))
+}
+df<-data.frame(replicate(6,sample(c(1:10,NA),10,rep=T)))
+round(vapply(df,summary,FUN.VALUE=c(mean=0,median=0,sd=0,mad=0,IQR=0)),3)
+L1<-matrix(as.vector(unlist(Map(summary,df))),nrow=5,ncol=6)
+colnames(L1)<-c('x1','x2','x3','x4','x5','x6')
+rownames(L1)<-c('mean','median','sd','mad','IQR')
+L1
+```
+
+## The homework 8 2020-12-02
+
+### Question
+
+(1).Write an Rcpp function for Exercise 9.4 (page 277, Statistical Computing with R).
+
+(2).Compare the corresponding generated random numbers with
+those by the R function you wrote before using the function
+“qqplot”.
+
+(3).Compare the computation time of the two functions with the function “microbenchmark”.
+
+(4).Comments your results.
+
+### Answer
+
+#### (1). 
+According to the R function writen before, Write an Rcpp function.
+```{r}
+library(Rcpp)
+library(RcppArmadillo)
+sourceCpp(
+code = '
+#include<Rmath.h>
+#include<RcppCommon.h>
+#include<RcppArmadillo.h>
+// [[Rcpp::depends(RcppArmadillo)]]
+using namespace std;
+using namespace arma;
+// [[Rcpp::export]]
+extern "C" SEXP rw_cpp(
+double sigma,
+double x0,
+int N){
+vec x(N, fill::zeros);
+x[0] = x0;
+vec u = randu<vec>(N);
+double k = 0.0;
+for (int i = 1; i < N; i++){
+double y = ::Rf_rnorm(x(i - 1), sigma);
+if ( u(i) <= exp(abs(x(i - 1))) / exp(abs(y)) ){
+x(i) = y;
+} else{
+x(i) = x(i - 1);
+k++;
+}
+}
+double accept_rate = 1 - (k / N);
+return Rcpp::List::create(
+Rcpp::Named("x") = x,
+Rcpp::Named("accept.rate") = accept_rate
+);
+}
+')
+```
+
+#### (2)
+```{r}
+fl<-function(x) 0.5*exp(-abs(x))
+rw.Metropolis <- function(sigma, x0, N) {
+  x <- numeric(N)
+  x[1] <- x0
+  u <- runif(N)
+  k <- 0
+  for (i in 2:N) {
+    y <- rnorm(1, x[i-1], sigma)
+    if (u[i] <= (fl(y) / fl(x[i-1])))
+      x[i] <- y else {
+        x[i] <- x[i-1]
+        k <- k + 1
+      }
+  }
+  return(list(x=x, k=k))
+}
+N <- 2000
+sigma <- c(.05, .5, 2, 16)
+x0 <- 20
+set.seed(1278)
+rw3 <- rw.Metropolis(sigma[3], x0, N)
+rwc3<- rw_cpp(sigma[3], x0, N)
+#number of candidate points rejected
+par(mfrow=c(1,2))
+plot(1:length(rw3$x),rw3$x,type = 'l',xlab = 'σ=2',ylab = 'X',main='R function')
+plot(1:length(rwc3$x),rwc3$x,type = 'l',xlab = 'σ=2',ylab = 'X',main='Rcpp function')
+qqnorm(rw3$x,main='R function',)
+qqline(rw3$x)
+qqnorm(rwc3$x,main='Rcpp function')
+qqline(rwc3$x)
+```
+
+#### (3)
+```{r}
+library('microbenchmark')
+print(c(1-rw3$k/2000, rwc3$accept.rate))
+compare<- microbenchmark(rw3=rw.Metropolis(sigma[3], x0, N), rwc3=rw_cpp(sigma[3], x0, N))
+compare
+```
+
+#### (4) 
+
+Acccording to the comparsion between the R function and Rcpp function, the accept rate is almost the same. And the time that Rcpp function spend is much less than the R function. It prove that Rcpp function can reduce the time. 

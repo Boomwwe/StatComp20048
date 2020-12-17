@@ -1,0 +1,181 @@
+---
+title: "Introduction to my function"
+author: "Guo Bangwei"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to my function}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Overview
+
+This is a simple rmakedown to introduce my two function. I write two function in my package. The function 'redata' is a function that can generate random number for my research. And the function 'naivekernelplot' is a function for my course. Next I will give a detailed introduction to these functions.
+
+## The function '_redata_'
+
+### Background
+
+Consider a longitudinal study with measurements of categorical outcomes obtained at $m$ times for $n$
+subjects. Observations from different subjects are assumed to be independent, but those from the same
+subject are generally correlated. Let the number of levels of the response be $q + 1$, then we can code
+the response using $q$ dummy variables $Y_{itj}$, where $Y_{itj}=1$ if subject $i(=1,...,n)$ has response level $j=(1,...,q+1)$
+at time $t(=1,...,m),$ and $Y_{itj}=0$ if otherwise. The response for the $i$th subject at time $t$ can now be represented by
+$Y_{it}=(Y_{it1},...,Y_{itq})^T,$ a $q$-vector. Throughout this article, $A^T$ denotes the transpose of a vector or matrix $A$. In the situation where the outcome is binary (i.e.,$q=1$), $Y_{it}$
+reduces to a scalar. Let $x_{it}$,  a $\bar p_n$-vector, coding covariates associated with the $i$th subject at time $t$.
+
+Since $(Y_{it1},...,Y_{it,q+1})$ follows a multinomial distribution, the likelihood for the $i$th subject at time $t$ can be written as
+$$\begin{eqnarray}
+ f(y_{it}|x_{it},\beta_n)=\Pi_{j=1}^{q+1}\pi_{itj}^{y_{itj}},\nonumber
+    \end{eqnarray}$$
+    
+where $\pi_{itj}=\pi_{itj}(\beta_n)=P(Y_{itj}=1|x_{it},\beta_n)$  and $\beta_n$ is a $ p_n$-vector  of regression parameters.
+
+If the categories are ordered, then a cumulative logistic model can be used:
+$$
+\begin{eqnarray}
+     \pi_{itj}(\beta_n)=[1+\exp(-\eta_j)]^{-1}-[1+\exp(-\eta_{j-1})]^{-1}, j=1,...,q
+\end{eqnarray}
+$$
+where $\eta_0=-\infty$, $\eta=(\eta_1,...,\eta_q)^T=X_{it}^T\beta_n$, $X^T_{it}=(I_q,(x_{it},...,x_{it})^T)_{q\times (q+\bar p_n)}$,  $\beta_n=(\delta_1,...,\delta_{q},\bar\beta_n^T)^T$, $\bar\beta_n$ is a  $\bar p_n$-vector of regression parameters, $\delta_1< \cdots<\delta_q$ are threshold values, $I_q$ is the $q$-identity matrix.
+If the categories are unordered, then a nominal logistic model can be used:
+
+$$
+\begin{eqnarray}
+ \pi_{itj}(\beta_n)=\frac{e^{\eta_j}}{ 1+\sum\limits_{r=1}^q e^{\eta_r}}, j=1,...,q
+\end{eqnarray}
+$$
+
+where  $(\eta_1,...,\eta_q)^T=X_{it}^T\beta_n$ $X_{it}=\text{diag}(x_{it},...,x_{it})_{q\bar p_n\times q}$, $\beta_n=(\beta_{n1}^T,...,\beta_{nq}^T)^T$
+
+
+### Introduction to redata.
+
+This function simulates some random data $x_{it}$ of $k$ subjects at $time=1$ and $time=2$ respectively in the above model. So we can calculate $\eta_{itj}$,$\pi_{itj}$ and $Y_{itj}$. And it generate any number of dimensions independently of three kinds of random number:
+
+(1).linear random number
+    $$x_{it}=a_it+\epsilon_{it}$$
+where $a_i\sim U(1,2)$ and $\epsilon_{it}\sim N(0,1)$
+
+(2).log random number
+    $$x_{it}=a_ilog(t)+\epsilon_{it}$$
+where $a_i\sim U(1,2)$ and $\epsilon_{it}\sim N(0,1)$
+
+(3).exponential random number
+    $$x_{it}=a_ie^t+\epsilon_{it}$$
+where $a_i\sim U(1,2)$ and $\epsilon_{it}\sim N(0,1)$
+
+The source R code for _redata_ is as follows:
+```{r}
+redata<-function(k,l,fl,e){
+  id<-c(1:k,1:k)
+  time<-c(rep(1,k),rep(2,k))
+  data<-cbind(id,time)
+    linear<-matrix(rep(0,2*k*l),ncol=l)
+    for(j in 1:l){
+      linear1<-1:k
+      linear2<-1:k
+      for(i in 1:k){
+        a1<-runif(1,1,2)
+        linear1[i]<-a1*time[i]+rnorm(1,0,1)
+        linear2[i]<-a1*time[i+k]+rnorm(1,0,1)
+      }
+      li<-c(linear1,linear2)
+      linear[,j]<-li  
+    }
+    data<-cbind(data,linear)
+    flog<-matrix(rep(0,2*k*fl),ncol=fl)
+    for(j in 1:fl){
+      flog1<-1:k
+      flog2<-1:k
+      for(i in 1:k){
+        a1<-runif(1,1,2)
+        flog1[i]<-a1*log(time[i])+rnorm(1,0,1)
+        flog2[i]<-a1*log(time[i+k])+rnorm(1,0,1)
+      }
+      flo<-c(flog1,flog2)
+      flog[,j]<-flo 
+    }
+    data<-cbind(data,flog)
+    fexp<-matrix(rep(0,2*k*e),ncol=e)
+    for(j in 1:e){
+      fexp1<-1:k
+      fexp2<-1:k
+      for(i in 1:k){
+        a1<-runif(1,1,2)
+        fexp1[i]<-a1*exp(time[i])+rnorm(1,0,1)
+        fexp2[i]<-a1*exp(time[i+k])+rnorm(1,0,1)
+      }
+      fe<-c(fexp1,fexp2)
+      fexp[,j]<-fe  
+    }
+    data<-cbind(data,fexp)
+  colnames(data)<-c("id","time",rep("linear",l),rep("log",fl),rep("exp",e))
+  return(data)
+}
+ ##Example
+ redata(10,2,2,2)
+```
+
+## The function '_naivekernalplot_'
+
+### Background
+
+Since
+$$
+f(x)=\lim _{h \rightarrow 0} \frac{F(x+h)-F(x-h)}{2 h}=\lim _{h \rightarrow 0} \frac{1}{2 h} P(x-h<X \leq x+h)
+$$
+
+One could imagine estimating $f$ by picking a small value of $h$ and taking
+
+$$
+\begin{aligned}
+\hat{f}_{h}(x) &=\frac{1}{2 h}\left[\hat{F}_{n}(x+h)-\hat{F}_{n}(x-h)\right] \\
+&=\frac{1}{2 h n} \sum_{i=1}^{n} I\left(x-h<X_{i} \leq x+h\right) \\
+&=\frac{1}{n} \sum_{i=1}^{n} \frac{1}{h} K\left(\frac{X_{i}-x}{h}\right)
+\end{aligned}
+$$
+where $K(x)=\frac{1}{2} I(-1<x \leq 1)$
+
+This is the naive density estimate.
+
+
+### Introduction to naivekernalplot
+
+This function offer different bandwidth $h$ and any numbers of random number $N$ to estimate a mixed Normal Distribution: 
+$$f(x)=\frac{1}{2} \phi(x ; 0,1)+\frac{1}{10} \sum_{j=0}^{4} \phi(x ; j / 2-1,1 / 10)$$
+
+The source R code for _naivekernelplot_ is as follows:
+
+```{r}
+naivekernelplot<-function(N,h){
+    rf<-1:N
+    index<-sample(1:6,N,replace=TRUE,prob=c(0.5,0.1,0.1,0.1,0.1,0.1))
+    for (i in 1:N) {
+       if(index[i]==1){rf[i]<-rnorm(1,0,1)}
+       else rf[i]<-rnorm(1,(index[i]-2)/2-1,0.1)
+}
+    naive<-function(x,X,h){
+    n<-length(X)
+    K<-function(l){
+    if(-1<l&&l<1) return(1)
+    else return(0)
+    }
+    sum=0
+    for (i in 1:n) {
+    sum=sum+(1/n)*(1/h)*K((X[i]-x)/h)
+  }
+    return(sum)
+}
+    xl<-seq(-3,3,0.001)
+    m<-1:length(xl)
+    for(i in 1:length(xl)){
+    m[i]<-naive(xl[i],rf,h)
+  }
+    plot(xl,m,type='l',xlab ='x',ylab='naive estimate f(x)')
+}
+##Example:
+  set.seed(1998)
+  naivekernelplot(1000,0.1)
+```
