@@ -22,7 +22,6 @@ should contain at least a couple of LaTeX formulas.
 #### Example 1
 
 This is a Q-Qplot picture.\
-![Q-Qplot](C:\Users\86183\Desktop\gbw\jisuan\QQplot1.png)\
 
 #### Example 2
 
